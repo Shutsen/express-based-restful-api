@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
-mongoose.connect(`mongodb+srv://Shutsen:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-qe6aq.mongodb.net/test?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USERNAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-qe6aq.mongodb.net/test?retryWrites=true&w=majority`, {
 	useNewUrlParser: true
 });
 
