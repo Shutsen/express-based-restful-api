@@ -6,8 +6,14 @@ const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
 	Product.find()
+		.select('name price _id')
 		.exec()
-		.then(products => res.status(200).json({ products }))
+		.then(products => {
+			res.status(200).json({
+				count: products.length,
+				products: products
+			})
+		})
 		.catch(err => res.status(500).json({ error: err }));
 });
 
@@ -21,7 +27,7 @@ router.post('/', (req, res, next) => {
 		.save()
 		.then(result => {
 			res.status(201).json({
-				message: 'A new product has been created! Well done man!',
+				message: 'A new product has been created! Well done!',
 				product: product
 			});
 		})
@@ -35,6 +41,7 @@ router.post('/', (req, res, next) => {
 router.get('/:product_id', (req, res, next) => {
 	const id = req.params.product_id;
 	Product.findById(id)
+		.select('name price _id')
 		.exec()
 		.then(product => {
 			if (product) {
@@ -53,17 +60,10 @@ router.get('/:product_id', (req, res, next) => {
 });
 
 router.patch('/:product_id', (req, res, next) => {
-	console.log('connected via Patch request')
 	Product.update({ _id: req.params.product_id }, { $set: req.body })
 		.exec()
-		.then(product => {
-			if (product) {
-				res.status(200).json({ product });
-			} else {
-				res.status(404).json({
-					message: 'No valid product found for the provided id'
-				});
-			}
+		.then(result => {
+			res.status(200).json({ message: 'Product updated' })
 		})
 		.catch(err => {
 			res.status(500).json({
@@ -75,7 +75,7 @@ router.patch('/:product_id', (req, res, next) => {
 router.delete('/:product_id', (req, res, next) => {
 	Product.remove({ _id: req.params.product_id })
 		.exec()
-		.then(result => res.status(200).json({ result }))
+		.then(result => res.status(200).json({ message: 'Product deleted' }))
 		.catch(err => res.status(500).json({ error: err }));
 });
 
