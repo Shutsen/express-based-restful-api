@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
 		cb(null, './uploads/');
 	},
 	filename: function (req, file, cb) {
-		cb(null, new Date().toISOString() + file.originalname);
+		cb(null, new Date().toISOString() + '-' + file.originalname);
 	}
 })
 
@@ -32,6 +32,7 @@ const upload = multer({
 
 const Product = require('../models/product');
 
+// GET all products and return them with the total count
 router.get('/', (req, res, next) => {
 	Product.find()
 		.select('name price _id productImage')
@@ -45,6 +46,7 @@ router.get('/', (req, res, next) => {
 		.catch(err => res.status(500).json({ error: err }));
 });
 
+// POST new product, API requires name, price and product image
 router.post('/', upload.single('productImage'), (req, res, next) => {
 	console.log(req.file);
 	const product = new Product({
@@ -68,6 +70,7 @@ router.post('/', upload.single('productImage'), (req, res, next) => {
 		});
 });
 
+// GET the detail of a certain product
 router.get('/:product_id', (req, res, next) => {
 	const id = req.params.product_id;
 	Product.findById(id)
@@ -89,6 +92,7 @@ router.get('/:product_id', (req, res, next) => {
 		});
 });
 
+// PATCH - update a certain product - only updates the fields that are sent and valid
 router.patch('/:product_id', (req, res, next) => {
 	Product.update({ _id: req.params.product_id }, { $set: req.body })
 		.exec()
@@ -102,6 +106,7 @@ router.patch('/:product_id', (req, res, next) => {
 		});
 });
 
+// DELETE - remove a certain product
 router.delete('/:product_id', (req, res, next) => {
 	Product.remove({ _id: req.params.product_id })
 		.exec()
