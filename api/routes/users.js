@@ -6,6 +6,17 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 router.post('/signup', (req, res, next) => {
+	// check if email already exists
+	User.find({ email: req.body.email })
+		.exec()
+		.then(user => {
+			if (user) {
+				return res.status(409).json({ message: 'A user with this email address already exists.' })
+			}
+		})
+		.catch(err => json.status(500).json({ error: err }));
+
+	// hash the password and create new user
 	bcrypt.hash(req.body.password, 10, (err, hash) => {
 		if (err) {
 			return res.status(500).json({
