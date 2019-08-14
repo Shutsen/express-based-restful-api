@@ -7,7 +7,6 @@ const userSchema = mongoose.Schema({
 	email: {
 		type: String,
 		required: true,
-		unique: true, // doesn't do validation though! Email already exist check is still needed!
 		match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 	},
 	password: { type: String, required: true }
