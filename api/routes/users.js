@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const security = require('../../utils/authentication/security');
+const usersController = require('../controllers/users');
 
 const User = require('../models/user');
 
@@ -68,35 +69,8 @@ router.post('/login', (req, res, next) => {
 		})
 })
 
-// GET all users and return them with the total count
-router.get('/', (req, res, next) => {
-	User.find()
-		.select('first_name last_name email _id')
-		.then(users => {
-			res.status(200).json({
-				count: users.length,
-				users: users
-			})
-		})
-		.catch(err => res.status(500).json({ error: err }));
-});
-
-
-// GET user detail
-router.get('/:user_id', (req, res, next) => {
-	User.findById(req.params.user_id)
-		.select('first_name last_name email _id')
-		.exec()
-		.then(user => res.status(200).json({ user }))
-		.catch(err => res.status(500).json({ error: err }));
-});
-
-// DELETE - remove a certain user
-router.delete('/:user_id', (req, res, next) => {
-	User.remove({ _id: req.params.user_id })
-		.exec()
-		.then(result => res.status(200).json({ message: 'User deleted' }))
-		.catch(err => res.status(500).json({ error: err }));
-});
+router.get('/', usersController.getAll);
+router.get('/:user_id', usersController.getDetail);
+router.delete('/:user_id', usersController.delete);
 
 module.exports = router;
