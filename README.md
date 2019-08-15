@@ -6,10 +6,10 @@ npm install
 ```
 
 ### Database setup
-This project uses MongoDB Atlas as a database
-Create an account on: https://cloud.mongodb.com/user#/atlas/login
+This project uses MongoDB Atlas as a database.
+Create an account on: <a href="https://cloud.mongodb.com/user#/atlas/login" target="_blank">https://cloud.mongodb.com/user#/atlas/login</a>
 
-Choose the free plan and set it up with the default settings
+Choose the free plan and set it up with the default settings.
 In your Atlas cluster, click "connect" > "connect your application" and change / compare this project's app.js file: 
 "mongoose.connect..." with the provided URI connection string and your own user credentials
 
