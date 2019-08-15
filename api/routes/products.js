@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const uploadImage = require('../../src/utils/upload_image');
+const uploadImage = require('../../utils/upload_image');
 const checkAuth = require('../middleware/check-auth');
 const ProductsController = require('../controllers/products');
 
