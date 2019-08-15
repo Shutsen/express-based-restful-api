@@ -79,7 +79,7 @@ Products.edit = (req, res, next) => {
 
 // Delete a product
 Products.delete = (req, res, next) => {
-		Product.remove({ _id: req.params.product_id })
+		Product.deleteOne({ _id: req.params.product_id })
 			.exec()
 			.then(result => res.status(200).json({ message: 'Product deleted' }))
 			.catch(err => res.status(500).json({ error: err }));
