@@ -2,8 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const security = require('../../utils/authentication/security');
 
 const User = require('../models/user');
 
@@ -11,31 +10,24 @@ const User = require('../models/user');
 router.post('/signup', (req, res, next) => {
 	User.find({ email: req.body.email })
 		.exec()
-		.then(user => {
+		.then(async existingUser => {
 			// if email already exists, return ad hoc
-			if (user.length > 0) {
+			if (existingUser.length > 0) {
 				// Send 409 status code - "Conflict. The request could not be completed due to a conflict with the current state of the target resource."
 				return res.status(409).json({ message: 'A user with this email address already exists.' })
 			}
 
 			// hash the password and create new user
-			bcrypt.hash(req.body.password, 10, (err, hash) => {
-				if (err) {
-					return res.status(500).json({
-						error: err
-					});
-				}
+			const hashedPassword = await security.hash(req.body.password);
+			const user = new User({
+				_id: new mongoose.Types.ObjectId(),
+				first_name: req.body.first_name,
+				last_name: req.body.last_name,
+				email: req.body.email,
+				password: hashedPassword
+			});
 
-				const user = new User({
-					_id: new mongoose.Types.ObjectId(),
-					first_name: req.body.first_name,
-					last_name: req.body.last_name,
-					email: req.body.email,
-					password: hash
-				});
-
-				user
-				.save()
+			user.save()
 				.then(result => {
 					// Send 201 status code - "Created. The request has been fulfilled and has resulted in one or more new resources being created."
 					res.status(201).json({
@@ -48,7 +40,6 @@ router.post('/signup', (req, res, next) => {
 						error: err
 					})
 				});
-			})
 		})
 });
 
@@ -56,31 +47,25 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
 	User.find({ email: req.body.email })
 		.exec()
-		.then(user => {
-			if (user.length < 1) {
+		.then(async user => {
+			if (user.length === 0) {
 				// Send 401 status code - Unauthorized error
 				return res.status(401).json({ message: 'User authentication failed' });
 			}
-			bcrypt.compare(req.body.password, user[0].password, (err, compareRes) => {
-				if (err) {
-					return res.status(401).json({ message: 'User authentication failed' });
+			try {
+				const isValidPassword = await security.authenticate(req.body.password, user[0].password);
+				if (isValidPassword) {
+					const token = security.getToken(user[0].email, user[0]._id, process.env.JWT_KEY, "1h")
+					return res.status(200).json({
+						message: 'Authentication succeeded',
+						token: token
+					});
 				}
-				if (compareRes == false) {
-					return res.status(401).json({ message: 'User authentication failed' });
-				}
-				const token = jwt.sign(
-					{ email: user[0].email, id: user[0]._id},
-					process.env.JWT_KEY,
-					{ expiresIn: "1h" },
-				);
-				return res.status(200).json({
-					message: 'Authentication succeeded',
-					token: token
-				});
-			})
-			
+				return res.status(401).json({ message: 'User authentication failed' });
+			} catch(err) {
+				return res.status(401).json({ message: 'User authentication failed 3' });
+			}
 		})
-		.catch(err => res.status(500).json({ error: err }));
 })
 
 // GET all users and return them with the total count
