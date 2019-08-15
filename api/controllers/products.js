@@ -15,7 +15,7 @@ Products.getAll = (req, res, next) => {
 			})
 		})
 		.catch(err => res.status(500).json({ error: err }));
-}
+};
 
 // Get the detail of a product
 Products.getDetail = (req, res, next) => {
@@ -37,7 +37,7 @@ Products.getDetail = (req, res, next) => {
 				error: err
 			});
 		});
-}
+};
 
 // Create a new product -- name, price and product image are required
 Products.create = (req, res, next) => {
@@ -59,9 +59,9 @@ Products.create = (req, res, next) => {
 		.catch(err => {
 			res.status(500).json({
 				error: err
-			})
+			});
 		});
-}
+};
 
 // Update a product - only updates the fields that are sent and valid
 Products.edit = (req, res, next) => {
@@ -75,7 +75,7 @@ Products.edit = (req, res, next) => {
 				error: err
 			});
 		});
-}
+};
 
 // Delete a product
 Products.delete = (req, res, next) => {
@@ -83,6 +83,6 @@ Products.delete = (req, res, next) => {
 			.exec()
 			.then(result => res.status(200).json({ message: 'Product deleted' }))
 			.catch(err => res.status(500).json({ error: err }));
-}
+};
 
 module.exports = Products;
