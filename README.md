@@ -5,14 +5,22 @@
 npm install
 ```
 
-Environment variables `.env`
+### Database setup
+This project uses MongoDB Atlas as a database
+Create an account on: https://cloud.mongodb.com/user#/atlas/login
+
+Choose the free plan and set it up with the default settings
+In your Atlas cluster, click "connect" > "connect your application" and change / compare this project's app.js file: 
+"mongoose.connect..." with the provided URI connection string and your own user credentials
+
+### Environment variables `.env`
 ```
-MONGO_ATLAS_USERNAME=<get your username at MongoDB atlas>
-MONGO_ATLAS_PASSWORD=<get your password at MongoDB atlas>
-JWT_KEY=<your secret>
+MONGO_ATLAS_USERNAME=<your username for MongoDB atlas>
+MONGO_ATLAS_PASSWORD=<your password for MongoDB atlas>
+JWT_KEY=<a random created secret>
 ```
 
-### Hot-reloads for development
+### Run the following command for HMR development
 ```
 npm run start
 ```
