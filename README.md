@@ -4,6 +4,7 @@
 ```
 npm install
 ```
+In order for the new products POST API to work, add an "uploads" folder in the root dir
 
 ### Database setup
 This project uses MongoDB Atlas as a database.
