@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
+const checkAuth = require('../middleware/check-auth');
+const Product = require('../models/product');
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -30,8 +32,6 @@ const upload = multer({
 	fileFilter: fileFilter
 })
 
-const Product = require('../models/product');
-
 // GET all products and return them with the total count
 router.get('/', (req, res, next) => {
 	Product.find()
@@ -47,7 +47,7 @@ router.get('/', (req, res, next) => {
 });
 
 // POST new product, API requires name, price and product image
-router.post('/', upload.single('productImage'), (req, res, next) => {
+router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
 	console.log(req.file);
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
@@ -93,7 +93,7 @@ router.get('/:product_id', (req, res, next) => {
 });
 
 // PATCH - update a certain product - only updates the fields that are sent and valid
-router.patch('/:product_id', (req, res, next) => {
+router.patch('/:product_id', checkAuth, (req, res, next) => {
 	Product.update({ _id: req.params.product_id }, { $set: req.body })
 		.exec()
 		.then(result => {
@@ -107,7 +107,7 @@ router.patch('/:product_id', (req, res, next) => {
 });
 
 // DELETE - remove a certain product
-router.delete('/:product_id', (req, res, next) => {
+router.delete('/:product_id', checkAuth, (req, res, next) => {
 	Product.remove({ _id: req.params.product_id })
 		.exec()
 		.then(result => res.status(200).json({ message: 'Product deleted' }))
