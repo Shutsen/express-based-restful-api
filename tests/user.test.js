@@ -48,3 +48,23 @@ test('Should signup a new user', async () => {
 
 	expect(user.password).not.toBe(userOnePassword)
 })
+
+test('Should login exisiting user', async () => {
+	const response = await request(app)
+		.post('/users/login')
+		.send({
+			email: userOne.email,
+			password: userOnePassword
+		})
+		.expect(200)
+})
+
+test('Should fail to login user with wrong credentials', async () => {
+	await request(app)
+		.post('/users/login')
+		.send({
+			email: userOne.email,
+			password: 'wrongPassword'
+		})
+		.expect(401)
+})
