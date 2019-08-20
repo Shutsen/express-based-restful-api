@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -9,9 +8,10 @@ const userRoutes = require('./api/routes/users');
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
-mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USERNAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-qe6aq.mongodb.net/test?retryWrites=true&w=majority`, {
-	useNewUrlParser: true
-});
+mongoose.connect(process.env.MONGODB_URL, {
+	useNewUrlParser: true,
+	useCreateIndex: true
+})
 
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
