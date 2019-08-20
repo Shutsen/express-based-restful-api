@@ -5,7 +5,7 @@ const User = require('../models/user');
 const Users = {}
 
 // Get all users and return them with the total count
-Users.getAll = (req, res, next) => {
+Users.getAll = (req, res) => {
 	User.find()
 		.select('first_name last_name email _id')
 		.then(users => {
@@ -18,7 +18,7 @@ Users.getAll = (req, res, next) => {
 };
 
 // Get user detail
-Users.getDetail = (req, res, next) => {
+Users.getDetail = (req, res) => {
 	User.findById(req.params.user_id)
 		.select('first_name last_name email _id')
 		.exec()
@@ -27,7 +27,7 @@ Users.getDetail = (req, res, next) => {
 };
 
 // Signup new users
-Users.signup = (req, res, next) => {
+Users.signup = (req, res) => {
 	User.find({ email: req.body.email })
 		.exec()
 		.then(async existingUser => {
@@ -64,7 +64,7 @@ Users.signup = (req, res, next) => {
 };
 
 // Login existing users
-Users.login = (req, res, next) => {
+Users.login = (req, res) => {
 	User.find({ email: req.body.email })
 		.exec()
 		.then(async user => {
@@ -89,7 +89,7 @@ Users.login = (req, res, next) => {
 };
 
 // Delete a user
-Users.delete = (req, res, next) => {
+Users.delete = (req, res) => {
 	User.deleteOne({ _id: req.params.user_id })
 		.exec()
 		.then(result => res.status(200).json({ message: 'User deleted' }))

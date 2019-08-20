@@ -4,7 +4,7 @@ const Product = require('../models/product');
 const Products = {}
 
 // Get all products and return them with the total count
-Products.getAll = (req, res, next) => {
+Products.getAll = (req, res) => {
 	Product.find()
 		.select('name price _id productImage')
 		.exec()
@@ -18,7 +18,7 @@ Products.getAll = (req, res, next) => {
 };
 
 // Get the detail of a product
-Products.getDetail = (req, res, next) => {
+Products.getDetail = (req, res) => {
 	const id = req.params.product_id;
 	Product.findById(id)
 		.select('name price _id productImage')
@@ -40,7 +40,7 @@ Products.getDetail = (req, res, next) => {
 };
 
 // Create a new product -- name, price and product image are required
-Products.create = (req, res, next) => {
+Products.create = (req, res) => {
 	console.log(req.file);
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
@@ -64,7 +64,7 @@ Products.create = (req, res, next) => {
 };
 
 // Update a product - only updates the fields that are sent and valid
-Products.edit = (req, res, next) => {
+Products.edit = (req, res) => {
 	Product.update({ _id: req.params.product_id }, { $set: req.body })
 		.exec()
 		.then(result => {
@@ -78,7 +78,7 @@ Products.edit = (req, res, next) => {
 };
 
 // Delete a product
-Products.delete = (req, res, next) => {
+Products.delete = (req, res) => {
 		Product.deleteOne({ _id: req.params.product_id })
 			.exec()
 			.then(result => res.status(200).json({ message: 'Product deleted' }))
