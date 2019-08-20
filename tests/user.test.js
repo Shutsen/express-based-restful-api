@@ -1,9 +1,9 @@
 const request = require('supertest')
-const app = require('../app')
+const app = require('../src/app')
 const jwt = require('jsonwebtoken')
-const security = require('../utils/authentication/security')
+const security = require('../src/utils/authentication/security')
 const mongoose = require('mongoose')
-const User = require('../api/models/user')
+const User = require('../src/api/models/user')
 
 const userOneId = new mongoose.Types.ObjectId()
 const userOnePassword = 'randomPassword'
