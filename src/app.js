@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
@@ -14,6 +15,7 @@ mongoose.connect(process.env.MONGODB_URL, {
 })
 
 app.use(morgan('dev'));
+app.use(helmet());
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
