@@ -41,13 +41,16 @@ Products.getDetail = (req, res) => {
 
 // Create a new product -- name, price and product image are required
 Products.create = (req, res) => {
-	console.log(req.file);
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
 		price: req.body.price,
-		productImage: req.file.path
 	});
+
+	if (req.file) {
+		product.productImage = req.file.path
+	}
+
 	product
 		.save()
 		.then(result => {
